@@ -1,0 +1,257 @@
+\begin{tikzpicture}[
+    ynode/.style={draw=red!50,circle,fill=red!50,scale=.35,inner sep=1pt,minimum size=1.7em},
+    zbar/.style={shorten >=-3,shorten <=-3,line width=6,round cap-round cap},
+    znode/.style={white,draw=black,circle,fill=black,scale=.5,inner sep=1pt,minimum size=1.7em},
+    hnode/.style={white,draw=black,circle,fill=gray,scale=.5,inner sep=1pt,minimum size=1.7em},
+    bnode/.style={white,draw=blue!50,circle,fill=blue!50,scale=.5,inner sep=1pt,minimum size=1.7em},
+    ]
+
+  \newcommand\savename[2]{\expandafter\xdef\csname name#1\endcsname{#2}};
+  \newcommand\getname[1]{\csname name#1\endcsname};
+  \foreach \n/\t in {0/A,1/Bb,2/B,3/C,4/Db,5/D,6/Eb,7/E,8/F,9/Gb,10/G,11/Ab}{
+    \savename{\n}{\t};
+    \savename{\t}{\n};
+  }
+
+\newcommand{\defRoot}{
+  \foreach \str/\tune [count=\ni] in \tuning {
+    \ifthenelse{\ni = 1}{
+      \def\rootNote{\getname{\tune}}}{}
+  }
+}
+
+\newcommand{\Ukelele}{
+  \def\strings{4}
+  \def\tuning{1/A, 2/E, 3/C, 4/G}
+  \def\rootNote{\getname{A}}
+}
+\newcommand{\BaritoneUkelele}{
+  \def\strings{4}
+  \def\tuning{1/E, 2/B, 3/G, 4/D}
+  \def\rootNote{\getname{E}}
+}
+\newcommand{\Guitar}{
+  \def\strings{6}
+  \def\tuning{1/E, 2/B, 3/G, 4/D, 5/A, 6/E}
+  \def\rootNote{\getname{E}}
+}
+
+\newcommand{\drawLines}{  
+%%%% Draw the base and set coordinates %%%%
+  \begin{scope}[xscale=-15,yscale=.3,line width=.5]
+
+    \xdef\x{1}
+    %% Left line
+    \draw[line width=1.5] (1,1) -- (1,\strings);
+    \foreach \fret in {1,...,\frets}{
+      %% Set coordinate for each string
+      \foreach \str in {1,...,\strings}{
+        % Reverse strings so 1 is on top
+        \coordinate (\str-\fret) at (0.97193715634*\x,\strings+1-\str);
+      }
+      %% Set coordinate for the text above
+      \coordinate (Top-\fret) at (0.97193715634*\x,\strings+1);
+      \coordinate (Label1-\fret) at (0.97193715634*\x,\strings+2);
+      \coordinate (Label1-0) at (1,\strings+2);
+      \coordinate (Label2-\fret) at (0.97193715634*\x,\strings+3);
+      \coordinate (Label2-0) at (1,\strings+3);
+      \coordinate (Label3-\fret) at (0.97193715634*\x,\strings+4);
+      \coordinate (Label3-0) at (1,\strings+4);
+      \coordinate (Label4-\fret) at (0.97193715634*\x,\strings+5);
+      \coordinate (Label4-0) at (1,\strings+5);
+      \coordinate (Label5-\fret) at (0.97193715634*\x,\strings+6);
+      \coordinate (Label5-0) at (1,\strings+6);
+      %% Compute the position of the fret
+      \pgfmathsetmacro\x{\x * 0.94387431268}
+      \xdef\x{\x}
+      %% Draw the fret
+      \draw (\x,1) -- (\x,\strings);
+    }
+
+    %% Draw each string
+    \foreach \str in {1,...,\strings}{
+      \draw (1,\str) -- (0.97153194115*\x,\str);
+        % Reverse strings so 1 is on top
+      \coordinate (start\str) at (1,\strings+1-\str);
+      \coordinate (\str-0) at (1,\strings+1-\str);
+    }
+  \end{scope}
+}
+
+  \newcommand{\drawDots}{
+    %% Draw the mark on the guitare
+    \pgfmathtruncatemacro\lowMidString{\strings / 2}
+    \pgfmathtruncatemacro\highMidString{(\strings / 2)+1}
+
+    \ifthenelse{\frets > 16}{\def\dotlist{3,5,7,9,15,17}}{
+    \ifthenelse{\frets > 14}{\def\dotlist{3,5,7,9,15}}{
+    \ifthenelse{\frets > 8}{\def\dotlist{3,5,7,9}}{
+    \ifthenelse{\frets > 6}{\def\dotlist{3,5,7}}{
+    \ifthenelse{\frets > 4}{\def\dotlist{3,5}}{
+    \ifthenelse{\frets > 2}{\def\dotlist{3}}{
+      \def\dotlist{{}}
+    } } } } } }
+
+    \foreach \f in \dotlist{
+      \draw[black!20,fill=black!10] ($(\lowMidString-\f)!.5!(\highMidString-\f)$) circle (.08);
+    }
+    \ifthenelse{\frets > 11}{
+      \draw[opacity=.20,fill,fill opacity=.10] (\lowMidString-12) circle (.08) (\highMidString-12) circle (.08);
+    }{}
+  }
+
+  \newcommand{\drawNumbers}{
+    %% Number above each space
+    \foreach \fret in {1,...,\frets}{
+      \node[scale=.8] at (Top-\fret) {\tiny \fret};
+    }
+  }
+
+  \newcommand{\drawTuning}{
+    % draw tuning
+    \foreach \str/\name in \tuning{
+      \node[znode] at (start\str) {\textbf{\name}};
+    }
+  }
+
+  %\node[znode] at (4-4) {\textbf{2}};
+  %\node[znode] at (3-5) {\textbf{4}};
+  %\draw[zbar] (2-3) -- (4-3);
+
+  %\node[scale=.8] at (Top-1) {G}; \node[znode] at (start1) {\textbf{m}}; \node[znode] at (start2) {\textbf{iii}}; \node[znode] at (start3) {\textbf{M}}; \node[znode] at (start4) {\textbf{v}}; \node[znode] at (1-3) {\textbf{M}}; \node[znode] at (2-3) {\textbf{v}}; \node[znode] at (3-2) {\textbf{ii}}; \node[znode] at (4-2) {\textbf{m}};
+
+  \newcommand{\drawNode}[4]{
+    \pgfmathtruncatemacro\mirror{#3+12}
+    \pgfmathtruncatemacro\fretlimit{\frets+1}
+    \ifthenelse{#3 < \fretlimit}{
+      \node[#1] at (#2-#3) {#4};
+    }{}
+    \ifthenelse{\mirror < \fretlimit}{
+      \node[#1] at (#2-\mirror) {#4};
+    }{}
+  }
+
+  \newcommand{\defineFrets}[1]{
+    \def\firstFret{#1};
+    \pgfmathtruncatemacro\secondFret{mod(\firstFret+1,12)};
+    \pgfmathtruncatemacro\thirdFret{mod(\firstFret+2,12)};
+    \pgfmathtruncatemacro\fourthFret{mod(\firstFret+3,12)};
+    \pgfmathtruncatemacro\fifthFret{mod(\firstFret+4,12)};
+  }
+
+  \newcommand{\drawCShapeLabel}[2]{
+    \pgfmathtruncatemacro\foundRoot{mod(\getname{#1}+(12-\rootNote),12)}
+    \foreach \offset in {5,...,8}{
+      \pgfmathtruncatemacro\offsetRoot{mod(\foundRoot-\offset,12)}
+      \drawNode{scale=.8}{#2}{\offsetRoot}{C};
+    }
+  }
+  \newcommand{\drawAShapeLabel}[2]{
+    \pgfmathtruncatemacro\foundRoot{mod(\getname{#1}+(12-\rootNote),12)}
+    \foreach \offset in {3,...,6}{
+      \pgfmathtruncatemacro\offsetRoot{mod(\foundRoot-\offset,12)}
+      \drawNode{scale=.8}{#2}{\offsetRoot}{A};
+    }
+  }
+  \newcommand{\drawGShapeLabel}[2]{
+    \pgfmathtruncatemacro\foundRoot{mod(\getname{#1}+(12-\rootNote),12)}
+    \foreach \offset in {0,...,3}{
+      \pgfmathtruncatemacro\offsetRoot{mod(\foundRoot-\offset,12)}
+      \drawNode{scale=.8}{#2}{\offsetRoot}{G};
+    }
+  }
+
+  \newcommand{\drawEShapeLabel}[2]{
+    \pgfmathtruncatemacro\foundRoot{mod(\getname{#1}+(12-\rootNote),12)}
+    \foreach \offset in {-1,...,2}{
+      \pgfmathtruncatemacro\offsetRoot{mod(\foundRoot+\offset,12)}
+      \drawNode{scale=.8}{#2}{\offsetRoot}{E};
+    }
+  }
+
+  \newcommand{\drawDShapeLabel}[2]{
+    \pgfmathtruncatemacro\foundRoot{mod(\getname{#1}+(12-\rootNote),12)}
+    \foreach \offset in {1,...,5}{
+      \pgfmathtruncatemacro\offsetRoot{mod(\foundRoot+\offset,12)}
+      \drawNode{scale=.8}{#2}{\offsetRoot}{D};
+    }
+  }
+
+  % \newcommand{\drawShapeName}[2]{
+  %   \defineFrets{#1};
+  %   \drawNode{scale=.8}{Label}{\thirdFret}{#2};
+  %   }
+
+  % \newcommand{\drawShapeLabel}[1]{
+  %   \pgfmathtruncatemacro\myRoot{mod(\getname{#1}-1,12)}
+  %   \drawShapeName{\myRoot}{E}
+  %   \pgfmathtruncatemacro\myRoot{mod(\myRoot+2,12)}
+  %   \drawShapeName{\myRoot}{D}
+  %   \pgfmathtruncatemacro\myRoot{mod(\myRoot+3,12)}
+  %   \drawShapeName{\myRoot}{C}
+  %   \pgfmathtruncatemacro\myRoot{mod(\myRoot+2,12)}
+  %   \drawShapeName{\myRoot}{A}
+  %   \pgfmathtruncatemacro\myRoot{mod(\myRoot+2,12)}
+  %   \drawShapeName{\myRoot}{G}
+  % }
+
+  \newcommand{\drawChord}[2]{
+    \foreach \chordNumber in #2{
+      \pgfmathtruncatemacro\tuneNumber{mod(\getname{#1}+(\chordNumber-1),12)};
+      \drawNote{\getname{\tuneNumber}}
+    }
+  }
+
+  \newcommand{\drawNote}[1]{
+    \pgfmathtruncatemacro\tuneNumber{\getname{#1}};
+    \foreach \str/\tune in \tuning{
+      \pgfmathtruncatemacro\curFret{mod(\tuneNumber+(12-\getname{\tune}), 12)}
+      \drawNode{znode}{\str}{\curFret}{\textbf{#1}};
+    }
+  }
+  \newcommand{\drawNoteAs}[3]{
+    \pgfmathtruncatemacro\tuneNumber{\getname{#1}};
+    \foreach \str/\tune in \tuning{
+      \pgfmathtruncatemacro\curFret{mod(\tuneNumber+(12-\getname{\tune}), 12)}
+      \drawNode{#3}{\str}{\curFret}{\textbf{#2}};
+    }
+  }
+
+  \newcommand{\drawMajorTriad}[1]{
+    \drawChord{#1}{{1, 5, 8}};
+  }
+  \newcommand{\drawMinorTriad}[1]{
+    \drawChord{#1}{{1, 4, 8}};
+  }
+  \newcommand{\drawSeventh}[1]{
+    \drawChord{#1}{{1, 5, 8, 11}};
+  }
+  \newcommand{\drawSixth}[1]{
+    \drawChord{#1}{{1, 5, 8, 10}};
+  }
+
+  \newcommand{\drawPentatonic}[1]{
+    \drawNoteAs{#1}{M}{znode}
+    \pgfmathtruncatemacro\newNote{mod(\getname{#1}+2,12)}
+    \drawNoteAs{\getname{\newNote}}{ii}{znode}
+    \pgfmathtruncatemacro\newNote{mod(\getname{#1}+4,12)}
+    \drawNoteAs{\getname{\newNote}}{iii}{znode}
+    \pgfmathtruncatemacro\newNote{mod(\getname{#1}+7,12)}
+    \drawNoteAs{\getname{\newNote}}{v}{znode}
+    \pgfmathtruncatemacro\newNote{mod(\getname{#1}+9,12)}
+    \drawNoteAs{\getname{\newNote}}{m}{znode}
+  }
+
+  \newcommand{\drawScale}[1]{
+    \drawPentatonic{#1}
+    \pgfmathtruncatemacro\newNote{mod(\getname{#1}+6,12)}
+    \drawNoteAs{\getname{\newNote}}{iv}{hnode}
+    \pgfmathtruncatemacro\newNote{mod(\getname{#1}+11,12)}
+    \drawNoteAs{\getname{\newNote}}{vii}{hnode}
+  }
+
+  \newcommand{\drawMajorBlues}[1]{
+    \drawPentatonic{#1}
+    \pgfmathtruncatemacro\newNote{mod(\getname{#1}+3,12)}
+    \drawNoteAs{\getname{\newNote}}{b3}{bnode}
+  }

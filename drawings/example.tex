@@ -1,0 +1,38 @@
+\def\frets{15} % Number of frets to draw, markers get put at 3, 5, 7, 9, 15, 17 and double markers on 12
+
+% \Ukelele{}
+% \BaritoneUkelele{}
+\Guitar{}
+% Inside guitar, you can define new instruments like this:
+%   \def\strings{6}
+%   \def\tuning{1/E, 2/B, 3/G, 4/D, 5/A, 6/E}
+%   \def\rootNote{\getname{E}} % Highest string, same as 1 in \tuning
+
+
+\drawLines{} % drawLines is mandatory
+\drawDots{} % draw the fret markers
+\drawNumbers{} % draw numbers over frets
+% \drawTuning{} % draw the instrument tuning on the nut
+
+% \def\n{C} % You can define variables to use
+% Example: \drawMajorTriad{\n}
+
+% CAGED: draw labels for CAGED for the given scale. You have on option between five layers to draw on Label1-Label5
+% \drawCShapeLabel{C}{Label5}
+% \drawAShapeLabel{C}{Label4}
+% \drawGShapeLabel{C}{Label3}
+% \drawEShapeLabel{C}{Label2}
+% \drawDShapeLabel{C}{Label1}
+
+% \drawNote{B} % Draw the note
+% \drawNoteAs{B}{M}{znode} % Draw note with specifications. B is the note, M is what to write, znode is how to write it. (znode is black, hnode is grey, bnode is blue)
+
+% \drawChord{G}{{1,5,8}} % Draw all notes in the chord, #1 is the root, {1,5,8} are the notes you would like. {1,5,8} is a major triad.
+% \drawMajorTriad{C} % Draw all the notes from the major triad
+% \drawMinorTriad{D} % Draw all the notes from the minor triad
+% \drawSeventh{D} % Draw all the notes from the seventh chord
+% \drawSixth{D} % Draw all the notes from the Sixth chord
+
+% \drawPentatonic{G} % Draw all relative notes in the pentatonic as numbers (i, ii, iii, v, vi). i is noted as M (major), vi is noted as m (minor)
+% \drawScale{G} % Draw all relative notes in the major scale as numbers (i, ii, iii, iv, v, vi, vii). i is notes as M (major), vi is noted as m (minor)
+% \drawMajorBlues{G} % Draw all relative notes in the major blues scale as numbers (i, ii, b3, iii, v, vi). i is notes as M (major), vi is noted as m (minor), biii is noted as b3

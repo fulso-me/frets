@@ -1,0 +1,15 @@
+%% autocmd BufWritePost * !pdflatex "<afile>"
+
+\documentclass[margin=.2cm]{standalone}
+
+\usepackage{tikz}
+\usepackage{ifthen}
+\usetikzlibrary{calc,arrows}
+
+\begin{document}
+
+\input{beginfrets.tex}
+
+%autogen
+
+\input{endfrets.tex}
