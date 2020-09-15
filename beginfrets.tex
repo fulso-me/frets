@@ -124,7 +124,16 @@
     \pgfmathtruncatemacro\mirror{#3+12}
     \pgfmathtruncatemacro\fretlimit{\frets+1}
     \ifthenelse{#3 < \fretlimit}{
-      \node[#1] at (#2-#3) {#4};
+      \ifthenelse{#3 = 0}{
+        \begingroup\expandafter\expandafter\expandafter\endgroup
+        \expandafter\ifx\csname dontprintnut\endcsname\relax
+          % \dontprintnut is undefined or \relax
+          \node[#1] at (#2-#3) {#4};
+        \else
+          % \dontprintnut is set
+        \fi
+      }
+      {\node[#1] at (#2-#3) {#4};}
     }{}
     \ifthenelse{\mirror < \fretlimit}{
       \node[#1] at (#2-\mirror) {#4};
@@ -141,29 +150,29 @@
 
   \newcommand{\drawCShapeLabel}[2]{
     \pgfmathtruncatemacro\foundRoot{mod(\getname{#1}+(12-\rootNote),12)}
-    \foreach \offset in {5,...,8}{
-      \pgfmathtruncatemacro\offsetRoot{mod(\foundRoot-\offset,12)}
+    \foreach \offset in {4,...,7}{
+      \pgfmathtruncatemacro\offsetRoot{mod(\foundRoot+\offset,12)}
       \drawNode{scale=.8}{#2}{\offsetRoot}{C};
     }
   }
   \newcommand{\drawAShapeLabel}[2]{
     \pgfmathtruncatemacro\foundRoot{mod(\getname{#1}+(12-\rootNote),12)}
-    \foreach \offset in {3,...,6}{
-      \pgfmathtruncatemacro\offsetRoot{mod(\foundRoot-\offset,12)}
+    \foreach \offset in {6,...,10}{
+      \pgfmathtruncatemacro\offsetRoot{mod(\foundRoot+\offset,12)}
       \drawNode{scale=.8}{#2}{\offsetRoot}{A};
     }
   }
   \newcommand{\drawGShapeLabel}[2]{
     \pgfmathtruncatemacro\foundRoot{mod(\getname{#1}+(12-\rootNote),12)}
-    \foreach \offset in {0,...,3}{
-      \pgfmathtruncatemacro\offsetRoot{mod(\foundRoot-\offset,12)}
+    \foreach \offset in {8,...,12}{
+      \pgfmathtruncatemacro\offsetRoot{mod(\foundRoot+\offset,12)}
       \drawNode{scale=.8}{#2}{\offsetRoot}{G};
     }
   }
 
   \newcommand{\drawEShapeLabel}[2]{
     \pgfmathtruncatemacro\foundRoot{mod(\getname{#1}+(12-\rootNote),12)}
-    \foreach \offset in {-1,...,2}{
+    \foreach \offset in {11,...,14}{
       \pgfmathtruncatemacro\offsetRoot{mod(\foundRoot+\offset,12)}
       \drawNode{scale=.8}{#2}{\offsetRoot}{E};
     }
@@ -244,7 +253,7 @@
 
   \newcommand{\drawScale}[1]{
     \drawPentatonic{#1}
-    \pgfmathtruncatemacro\newNote{mod(\getname{#1}+6,12)}
+    \pgfmathtruncatemacro\newNote{mod(\getname{#1}+5,12)}
     \drawNoteAs{\getname{\newNote}}{iv}{hnode}
     \pgfmathtruncatemacro\newNote{mod(\getname{#1}+11,12)}
     \drawNoteAs{\getname{\newNote}}{vii}{hnode}
